@@ -22,7 +22,7 @@ GET operations here
 
 @app.get("/")
 async def root():
-    return {"message": "From Your Name, microservice - Coach searching, work in progress"}
+    return {"message": "Dariel, microservice - Coach searching, work in progress"}
 
 """
 Show the coach information based on the coach_id as an HTML table webpage
@@ -123,6 +123,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {str(e)}")
 
+    #uvicorn.run(app, host="127.0.0.1", port=8000)
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
