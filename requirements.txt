@@ -20,3 +20,4 @@ Werkzeug==2.3.6
 python-dotenv
 sqlalchemy
 mysql-connector-python==8.0.28
+pyodbc==5.0.1
