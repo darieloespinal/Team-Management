@@ -28,7 +28,8 @@ class CoachResource:
         db_name = os.getenv("DB_NAME")
 
         # Create a SQLAlchemy engine
-        db_url = f"mysql+mysqlconnector://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+        #db_url = fcd micr"mysql+mysqlconnector://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+        db_url = f"mysql+mysqlconnector://doe2102:sql_for_mgmt@34.23.76.102/Managers"
         self.engine = db_al.create_engine(db_url)
         self.conn = self.engine.connect()
 
