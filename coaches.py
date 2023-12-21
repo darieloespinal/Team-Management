@@ -51,6 +51,15 @@ class CoachResource:
 
         return result_dicts
 
+    def get_paginated_coaches(self, limit, offset):
+        query = self.coaches_table.select().limit(limit).offset(offset)
+        exe = self.conn.execute(query)
+
+        column_names = exe.keys()
+        result = exe.fetchall()
+        result_dicts = [dict(zip(column_names, row)) for row in result]
+
+        return result_dicts
 
     def add_coach(self, coach: CoachModel):
         ins_query = self.coaches_table.insert().values(

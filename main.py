@@ -64,17 +64,15 @@ async def coach_info_by_id(coach_id: int):
     except Exception as e:
         return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
 
-
+"""
 @app.get("/v1/coaches", response_class=HTMLResponse)
 async def get_coaches_pagination(
-    week: int = None,
-    season: int = None,
     limit: int = Query(default=2, le=4),
     offset: int = Query(default=0, ge=0)
 ):
     try:
         # Retrieve paginated coach information
-        coaches_data = coach_resource.get_coaches(week, season, limit, offset)
+        coaches_data = coach_resource.get_paginated_coaches(limit, offset)
 
         if coaches_data:
             # Create a list to store the result
@@ -96,7 +94,11 @@ async def get_coaches_pagination(
             prev_offset = max(offset - limit, 0)
             next_offset = offset + limit
 
-            pagi_links = paginate(link="/v1/coaches", total=len(data_list), limit=limit, offset=offset)
+            pagi_links = [
+                {"rel": "current", "href": f"/v1/coaches?limit={limit}&offset={offset}"},
+                {"rel": "prev", "href": f"/v1/coaches?limit={limit}&offset={prev_offset}"},
+                {"rel": "next", "href": f"/v1/coaches?limit={limit}&offset={next_offset}"}
+            ]
 
             result_dict["data"] = data_list
             result_dict["links"] = pagi_links
@@ -111,19 +113,20 @@ async def get_coaches_pagination(
         return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
 
 """
+"""
 POST operation to add a new coach
 """
 @app.post("/coaches")
 async def add_coach(coach_data: CoachModel):
     try:
-        result = coach_resource.add_coach(coach_data)
+        coach_resource.add_coach(coach_data)
         coach_id = coach_data.coach_id
         coach_name = coach_data.name
         
         message_content = f'New Coach {coach_name} Added to the database!'
         subject="Coach Added"
         
-        GET_response = await player_by_id(player_id)
+        GET_response = await coach_info_by_id(coach_id)
            
         return GET_response
 
@@ -138,7 +141,7 @@ async def modify_coach(coach_id: int, coach_data: CoachModel):
     try:
         coach_resource.modify_coach(coach_id, coach_data)
         
-        GET_response = await player_by_id(player_id)
+        GET_response = await coach_info_by_id(coach_id)
         return GET_response
 
 
