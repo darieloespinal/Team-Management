@@ -64,8 +64,8 @@ async def coach_info_by_id(coach_id: int):
     except Exception as e:
         return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
 
-"""
-@app.get("/v1/coaches", response_class=HTMLResponse)
+
+@app.get("/v1/coaches")
 async def get_coaches_pagination(
     limit: int = Query(default=2, le=4),
     offset: int = Query(default=0, ge=0)
@@ -112,7 +112,7 @@ async def get_coaches_pagination(
     except Exception as e:
         return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
 
-"""
+
 """
 POST operation to add a new coach
 """
