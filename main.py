@@ -64,6 +64,52 @@ async def coach_info_by_id(coach_id: int):
     except Exception as e:
         return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
 
+
+@app.get("/v1/coaches", response_class=HTMLResponse)
+async def get_coaches_pagination(
+    week: int = None,
+    season: int = None,
+    limit: int = Query(default=2, le=4),
+    offset: int = Query(default=0, ge=0)
+):
+    try:
+        # Retrieve paginated coach information
+        coaches_data = coach_resource.get_coaches(week, season, limit, offset)
+
+        if coaches_data:
+            # Create a list to store the result
+            result_dict = {}
+            data_list = []
+
+            # Loop through the paginated coach data
+            for coach in coaches_data:
+                # Construct the "links" part of the response
+                links = [
+                    {"rel": "self", "href": f"/v1/coaches/{coach['id']}/info"},
+                    {"rel": "coaches", "href": f"/v1/coaches"}
+                ]
+                coach_dict = coach.copy()
+                coach_dict["links"] = links
+                data_list.append(coach_dict)
+
+            # Construct the "links" part for pagination
+            prev_offset = max(offset - limit, 0)
+            next_offset = offset + limit
+
+            pagi_links = paginate(link="/v1/coaches", total=len(data_list), limit=limit, offset=offset)
+
+            result_dict["data"] = data_list
+            result_dict["links"] = pagi_links
+
+            return result_dict
+
+        else:
+            message = "No coach data found for the specified criteria."
+            return Response(content=message, media_type="text/plain", status_code=200)
+
+    except Exception as e:
+        return Response(content=f"Error: {str(e)}", media_type="text/plain", status_code=500)
+
 """
 POST operation to add a new coach
 """
@@ -123,8 +169,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {str(e)}")
 
-    #uvicorn.run(app, host="127.0.0.1", port=8000)
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
+    #uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 
