@@ -13,10 +13,13 @@ app = FastAPI()
 
 # Database and table names
 db_config = {
-   "host": "34.23.76.102",
+   #"host": "34.23.76.102",
+   #"host": "team-mgmt-402907:us-east1:mysql-mgmt",
+   "host": "team-mgmt.cx460omy2igq.us-east-1.rds.amazonaws.com",
    "database": "Managers",
-   "user": "doe2102",
-   "password": "sql_for_mgmt",
+   "user": "doeuser",
+   "password": "doe12345",
+   #"port": "3306"
 }
 
 #app.mount("/docs", StaticFiles(directory="docs", html=True), name="docs")
@@ -47,11 +50,11 @@ async def root():
 async def item_info_by_id(table_name: str, item_id: int):
     try:
         resource = None
-        if table_name == "coaches":
+        if table_name == "Head_Coaches":
             resource = coach_resource
-        elif table_name == "assistant":
+        elif table_name == "Assistant_Coaches":
             resource = assistant_resource
-        elif table_name == "general":
+        elif table_name == "General_Managers":
             resource = general_resource
         else:
             raise HTTPException(status_code=404, detail="Table not found")
@@ -99,11 +102,11 @@ async def get_paginated_items(
 ):
     try:
         resource = None
-        if table_name == "coaches":
+        if table_name == "Head_Coaches":
             resource = coach_resource
-        elif table_name == "assistant":
+        elif table_name == "Assistant_Coaches":
             resource = assistant_resource
-        elif table_name == "general":
+        elif table_name == "General_Managers":
             resource = general_resource
         else:
             raise HTTPException(status_code=404, detail="Table not found")
@@ -154,11 +157,11 @@ async def get_paginated_items(
 async def add_item(item_data: BaseModel, table_name: str):
     try:
         resource = None
-        if table_name == "coaches":
+        if table_name == "Head_Coaches":
             resource = coach_resource
-        elif table_name == "assistant":
+        elif table_name == "Assistant_Coaches":
             resource = assistant_resource
-        elif table_name == "general":
+        elif table_name == "General_Managers":
             resource = general_resource
         else:
             raise HTTPException(status_code=404, detail="Table not found")
@@ -182,11 +185,11 @@ async def add_item(item_data: BaseModel, table_name: str):
 async def modify_item(item_id: int, item_data: BaseModel, table_name: str):
     try:
         resource = None
-        if table_name == "coaches":
+        if table_name == "Head_Coaches":
             resource = coach_resource
-        elif table_name == "assistant":
+        elif table_name == "Assistant_Coaches":
             resource = assistant_resource
-        elif table_name == "general":
+        elif table_name == "General_Managers":
             resource = general_resource
         else:
             raise HTTPException(status_code=404, detail="Table not found")
@@ -205,11 +208,11 @@ async def modify_item(item_id: int, item_data: BaseModel, table_name: str):
 async def delete_item(item_id: int, table_name: str):
     try:
         resource = None
-        if table_name == "coaches":
+        if table_name == "Head_Coaches":
             resource = coach_resource
-        elif table_name == "assistant":
+        elif table_name == "Assistant_Coaches":
             resource = assistant_resource
-        elif table_name == "general":
+        elif table_name == "General_Managers":
             resource = general_resource
         else:
             raise HTTPException(status_code=404, detail="Table not found")
@@ -224,14 +227,15 @@ async def delete_item(item_id: int, table_name: str):
 
 
 if __name__ == "__main__":
-    try:
-        connection = mysql.connector.connect(**db_config)
-        print("Connected to MySQL")
-    except Exception as e:
-        print(f"Error: {str(e)}")
+  #  try:
+  #      connection = mysql.connector.connect(**db_config)
+  #      print("Connected to MySQL")
+  #  except Exception as e:
+  #      print(f"Error: {str(e)}")
 
     #uvicorn.run(app, host="127.0.0.1", port=8000)
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 
 

@@ -12,8 +12,8 @@ class AssistantModel(BaseModel):
     name: str
     team: str = None
     birthdate: str = None
-    startdate: int = None
-    enddate: int = None
+    startdate: str = None
+    enddate: str = None
     email: str = None
     role: str = None
 
@@ -28,7 +28,7 @@ class AssistantResource:
 
         # Create a SQLAlchemy engine
         #db_url = f"mysql+mysqlconnector://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
-        db_url = f"mysql+mysqlconnector://doe2102:sql_for_mgmt@34.23.76.102/Managers"
+        db_url = f"mysql+mysqlconnector://doeuser:doe12345@team-mgmt.cx460omy2igq.us-east-1.rds.amazonaws.com/Managers"
         self.engine = db_al.create_engine(db_url)
         self.conn = self.engine.connect()
 
@@ -38,7 +38,7 @@ class AssistantResource:
         # Table object for the assistant coaches table
         self.assistant_table = db_al.Table('Assistant_Coaches', self.metadata, autoload_with=self.engine)
 
-    def get_assistant_by_id(self, assistant_id):
+    def get_item_by_id(self, assistant_id):
         query = self.assistant_table.select().where(self.assistant_table.columns.id == assistant_id)
         exe = self.conn.execute(query)
 
@@ -48,7 +48,7 @@ class AssistantResource:
 
         return result_dicts
 
-    def get_paginated_assistants(self, limit, offset):
+    def get_paginated_item(self, limit, offset):
         query = self.assistant_table.select().limit(limit).offset(offset)
         exe = self.conn.execute(query)
 
@@ -58,7 +58,9 @@ class AssistantResource:
 
         return result_dicts
 
-    def add_assistant(self, assistant: AssistantModel):
+    def add_item(self, assistant: AssistantModel):
+        print(assistant.id)
+        print(assistant.name)
         ins_query = self.assistant_table.insert().values(
             id=assistant.id,
             name=assistant.name,
@@ -73,7 +75,7 @@ class AssistantResource:
         self.conn.commit()
         return result
 
-    def modify_assistant(self, assistant: AssistantModel, assistant_id: int):
+    def modify_item(self, assistant: AssistantModel, assistant_id: int):
         update_data = {
             "name": assistant.name,
             "team": assistant.team,
@@ -88,7 +90,7 @@ class AssistantResource:
         self.conn.commit()
         return result
 
-    def delete_assistant(self, assistant_id):
+    def delete_item(self, assistant_id):
         del_query = self.assistant_table.delete().where(self.assistant_table.columns.id == assistant_id)
         result = self.conn.execute(del_query)
         self.conn.commit()
